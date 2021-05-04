@@ -24,8 +24,6 @@ class _SignInState extends State<SignIn> {
 
   AuthMethods authMethods = AuthMethods();
 
-  TextEditingController userNameTextEditingController =
-      new TextEditingController();
   TextEditingController emailTextEditingController =
       new TextEditingController();
   TextEditingController passwordTextEditingController =
@@ -33,32 +31,33 @@ class _SignInState extends State<SignIn> {
 
   DatabaseMethods databaseMethods = DatabaseMethods();
 
-  signIn() {
+  signIn() async {
     if (formkey.currentState.validate()) {
-      HelpFunction.saveUserEmailSharedPreference(
-          userNameTextEditingController.text);
-      // HelpFunction.saveUserEmailSharedPreference(
-      //     emailTextEditingController.text);
-
       setState(() {
         isloading = true;
-      });
-      databaseMethods
-          .getuserByUserEmail(emailTextEditingController.text)
-          .then((val) {
-        snapshotUserInfo = val;
-        HelpFunction.saveUserEmailSharedPreference(
-            snapshotUserInfo.docs[0].data()['name']);
       });
       authMethods
           .signInWithEmailAndPassword(emailTextEditingController.text,
               passwordTextEditingController.text)
-          .then((value) {
+          .then((value) async {
         if (value != null) {
           HelpFunction.saveUserLoggedInSharedPreference(true);
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => ChatRoom()));
         }
+      });
+      HelpFunction.saveUserEmailSharedPreference(
+          emailTextEditingController.text);
+
+      databaseMethods
+          .getuserByUserEmail(emailTextEditingController.text)
+          .then((val) {
+        snapshotUserInfo = val;
+        HelpFunction.saveUserNameSharedPreference(
+            snapshotUserInfo.docs[0].data()['name']);
+      });
+      setState(() {
+        isloading = true;
       });
     }
   }
@@ -100,6 +99,7 @@ class _SignInState extends State<SignIn> {
                         child: TextFormField(
                           style: simpleTextStyle(),
                           decoration: textFieldInputDecoration("password"),
+                          controller: passwordTextEditingController,
                           obscureText: true,
                           validator: (val) {
                             return val.length < 6

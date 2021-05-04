@@ -16,12 +16,13 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    getUserInfo();
     super.initState();
   }
 
   getUserInfo() async {
     Constants.myName = await HelpFunction.getUserNameSharedPreference();
+    setState(() {});
   }
 
   @override
