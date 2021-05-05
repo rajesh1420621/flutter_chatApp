@@ -54,8 +54,11 @@ class _SearchState extends State<Search> {
         "chatRoomId": chatRoomId,
       };
       DatabaseMethods().createChatRoom(chatRoomId, chatRoomMap);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => ConversationScreen()));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  ConversationScreen(chatRoomId: chatRoomId)));
     } else {
       print("You cannot send message");
     }
@@ -99,28 +102,6 @@ class _SearchState extends State<Search> {
     );
   }
 
-  // @override
-  // void initState() {
-  //   getUserInfo();
-  //   super.initState();
-  // }
-  //
-  // getUserInfo() async {
-  //   _myName = await HelpFunction.getUserNameSharedPreference();
-  //   setState(() {});
-  //   print("${_myName}");
-  // }
-// return searchSnapshot != null
-// ? ListView.builder(
-//  itemCount: searchSnapshot.docs.length,
-// shrinkWrap: true,
-// itemBuilder: (context, index) {
-//   return SearchTile(
-//     userEmail: searchSnapshot.docs[index].data()["name"],
-//     userName: searchSnapshot.docs[index].data()["email"],
-//   );
-// })
-// : Container();
   getChatRoomId(String a, String b) {
     if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
       return "$b\_$a";

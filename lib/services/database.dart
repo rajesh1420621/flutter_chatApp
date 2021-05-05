@@ -21,11 +21,38 @@ class DatabaseMethods {
 
   createChatRoom(String chatroomid, chatRoomMap) {
     FirebaseFirestore.instance
-        .collection("chatRoom")
+        .collection("ChatRoom")
         .doc(chatroomid)
         .set(chatRoomMap)
         .catchError((e) {
       print(e.tostring);
     });
+  }
+
+  addConversationMessages(String ChatRoomId, messageMap) {
+    FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .doc(ChatRoomId)
+        .collection("chats")
+        .add(messageMap)
+        .catchError((e) {
+      print(e.toString());
+    });
+  }
+
+  getConversationMessages(String ChatRoomId) async {
+    return await FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .doc(ChatRoomId)
+        .collection("chats")
+        .orderBy("time", descending: true)
+        .snapshots();
+  }
+
+  getChatRooms(String userName) async {
+    return await FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .where("users", arrayContains: userName)
+        .snapshots();
   }
 }
